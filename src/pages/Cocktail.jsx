@@ -39,7 +39,7 @@ const Cocktail = () => {
         <Link to="/" className="btn">
           Back home
         </Link>
-        <h3 className="drink-name">{name}</h3>
+        <h3 className="title">{name}</h3>
       </header>
       <div className="drink">
         <div className="img-container">
@@ -84,10 +84,6 @@ const Wrapper = styled.div`
   text-align: center;
   header {
     margin-bottom: 3rem;
-    .drink-name {
-      margin-top: 1rem;
-      font-size: 2.375rem;
-    }
   }
 
   .img-container {
