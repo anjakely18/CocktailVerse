@@ -1,10 +1,32 @@
+import axios from "axios";
 import React from "react";
+import { Form, redirect, useNavigation } from "react-router-dom";
+import { toast } from "react-toastify";
 import styled from "styled-components";
 
+const newsletterUrl = "https://www.course-api.com/cocktails-newsletter";
+
+export const action = async ({ request }) => {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData);
+  try {
+    const response = await axios.post(newsletterUrl, data);
+    console.log(response);
+    toast.success(response.data.msg);
+    return redirect("/");
+  } catch (error) {
+    console.log(error);
+    toast.error(error?.response?.data?.msg);
+    return error;
+  }
+};
+
 const Newsletter = () => {
+  const navigation = useNavigation;
+  const isSubmitting = navigation.state === "submitting";
   return (
     <Wrapper>
-      <form className="form">
+      <Form className="form" method="POST">
         <h3 className="title">Our newsletter</h3>
         <div className="form-row">
           <label htmlFor="name" className="form-label">
@@ -14,8 +36,8 @@ const Newsletter = () => {
             type="text"
             name="name"
             id="name"
-            defaultValue="Anja"
             className="form-input"
+            required
           />
         </div>
         <div className="form-row">
@@ -26,8 +48,8 @@ const Newsletter = () => {
             type="text"
             name="lastName"
             id="lastName"
-            defaultValue="Rasamoelina"
             className="form-input"
+            required
           />
         </div>
         <div className="form-row">
@@ -38,14 +60,14 @@ const Newsletter = () => {
             type="email"
             name="email"
             id="email"
-            defaultValue="test@test.com"
             className="form-input"
+            required
           />
         </div>
         <button type="submit" className="btn">
-          submit
+          {isSubmitting ? "submitting..." : "submit"}
         </button>
-      </form>
+      </Form>
     </Wrapper>
   );
 };
@@ -73,15 +95,6 @@ const Wrapper = styled.div`
     flex-direction: column;
     width: 100%;
     margin-bottom: 1rem;
-  }
-
-  .form-input {
-    border: 2px solid var(--color-primary);
-    padding: 0.75rem;
-
-    width: 100%;
-    background-color: var(--color-background);
-    font-size: 1.2rem;
   }
 
   .btn {

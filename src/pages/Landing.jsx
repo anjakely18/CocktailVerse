@@ -7,9 +7,10 @@ import CocktailList from "./CocktailList";
 const cocktailSearchUrl =
   "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=";
 
-export const loader = async () => {
-  const searchTerm = "";
+export const loader = async ({ request }) => {
   try {
+    const url = new URL(request.url);
+    const searchTerm = url.searchParams.get("search") || "";
     const response = await axios.get(`${cocktailSearchUrl}${searchTerm}`);
     return { drinks: response.data.drinks, searchTerm };
   } catch (error) {
@@ -21,7 +22,7 @@ const Landing = () => {
   const { drinks, searchTerm } = useLoaderData();
   return (
     <>
-      <SearchForm />
+      <SearchForm searchTerm={searchTerm} />
       <CocktailList drinks={drinks} />
     </>
   );
